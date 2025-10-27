@@ -25,17 +25,19 @@
           <input
             type="submit"
             value="Add Note"
-            class="bg-blue-400 text-white p-2 mt-2 rounded cursor-pointer"
+            class="bg-blue-400 text-white p-2 mt-2 rounded cursor-pointer hover:bg-yellow-300 hover:text-black"
           />
         </form>
       </div>
       <div class="notes w-1/3 mx-auto mt-10 text-white flex gap-3">
         <% if (files.length > 0) { %> <% files.forEach(function(file) { %>
-        <div class="border p-5 rounded mb-5 bg-gray-700 relative">
+        <div class="border p-5 rounded mb-5 bg-yellow-900 relative">
           <h1 class="text-3xl text-white font-bold tracking-tighter">
             <%= file.split(".txt").join("") %>
           </h1>
-          <a class="text-blue-500 inline-block mt-1" href="">Read more</a>
+          <a class="text-blue-500 inline-block mt-1" href="/file/<%=file%>"
+            >Read more</a
+          >
         </div>
         <% }); %> <% } else { %>
         <h2 class="text-2xl text-white">No Notes Available</h2>

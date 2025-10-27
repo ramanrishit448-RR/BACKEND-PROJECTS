@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="/stylesheets/style.css" />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  </head>
+  <body>
+    <div class="main w-full min-h-screen text-white p-10 bg-zinc-800">
+      <a
+        class="text-yellow-200 border rounded inline-block mb-12 px-5 py-5 hover:bg-yellow-300 hover:text-black"
+        href="/"
+        >Go back to home</a
+      >
+      <div class="my-4 p-6 border rounded bg-gray-700">
+        <h1 class="text-xl text-white font-bold tracking-tighter">
+          <%= filename.split(".txt").join("") %>
+        </h1>
+        <p class="text-xl mt-2 font-light"><%= data %></p>
+      </div>
+    </div>
+  </body>
+</html>
