@@ -35,9 +35,14 @@
           <h1 class="text-3xl text-white font-bold tracking-tighter">
             <%= file.split(".txt").join("") %>
           </h1>
-          <a class="text-blue-500 inline-block mt-1" href="/file/<%=file%>"
-            >Read more</a
-          >
+          <div class="flex w-full justify-between item-center">
+            <a class="text-blue-500 inline-block mt-1" href="/file/<%=file%>"
+              >Read more</a
+            >
+            <a class="text-grey-500 inline-block mt-1" href="/edit/<%= file %>"
+              >edit</a
+            >
+          </div>
         </div>
         <% }); %> <% } else { %>
         <h2 class="text-2xl text-white">No Notes Available</h2>

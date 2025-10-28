@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Edit Note</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  </head>
+  <body>
+    <div class="container mx-auto">
+      <h1>Edit Note: <%= filename %></h1>
+      <a class="text-blue-500 inline-block mb-10" href="/">Back to Home</a>
+      <form action="/edit" method="POST">
+        <input
+          type="text"
+          placeholder="Previous Name"
+          class="border text-gray-500 px-5 py-2 w-full rounded"
+          value="<%= filename %>"
+          name="previous"
+        />
+        <input
+          type="text"
+          placeholder="Update name"
+          class="border px-5 py-2 w-full rounded mt-2"
+          name="newName"
+        />
+        <input
+          class="bg-blue-400 text-white p-2 mt-2 rounded cursor-pointer hover:bg-yellow-300 hover:text-black"
+          type="submit"
+          value="Update"
+        />
+      </form>
+    </div>
+  </body>
+</html>

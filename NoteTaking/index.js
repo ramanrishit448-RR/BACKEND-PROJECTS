@@ -2,7 +2,6 @@ const express = require("express");
 const app = express();
 const path = require("path");
 const fs = require("fs");
-const { console } = require("inspector");
 
 app.set("view engine", "ejs");
 app.use(express.json());
@@ -29,6 +28,25 @@ app.get("/file/:filename", (req, res) => {
   fs.readFile(`./files/${req.params.filename}`, "utf-8", function (err, data) {
     res.render("show", { filename: req.params.filename, data: data });
   });
+});
+
+app.get("/edit/:filename", (req, res) => {
+  fs.readFile(`./files/${req.params.filename}`, "utf-8", function (err, data) {
+    res.render("edit", { filename: req.params.filename, data: data });
+  });
+});
+
+app.post("/edit", function (req, res) {
+  fs.rename(
+    `./files/${req.body.previous}`,
+    `./files/${req.body.newName}`,
+    function (err) {
+      if (err) {
+        console.log("ERROR: " + err);
+      }
+      res.redirect("/");
+    }
+  );
 });
 
 app.listen(3000, () => {
