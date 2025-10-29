@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Create User</title>
+    <link rel="stylesheet" href="/stylesheets/style.css" />
+  </head>
+
+  <body
+    class="min-h-screen flex items-center justify-center bg-gradient-to-br from-zinc-950 via-zinc-900 to-zinc-800 p-6"
+  >
+    <div
+      class="w-full max-w-lg bg-white/10 backdrop-blur-md border border-white/10 rounded-2xl shadow-[inset_1px_1px_0_rgba(255,255,255,0.2),_inset_-1px_-1px_0_rgba(0,0,0,0.3)] p-10 transition-all duration-300 hover:shadow-[0_0_25px_rgba(255,255,255,0.2)]"
+    >
+      <div class="flex items-center justify-between mb-8">
+        <a
+          href="/read"
+          class="text-black bg-yellow-400 hover:bg-yellow-500 font-semibold px-4 py-2 rounded-xl shadow-md transition-all duration-300"
+        >
+          ← View Users
+        </a>
+        <h1 class="text-3xl font-bold text-white tracking-tight">
+          Create User
+        </h1>
+      </div>
+
+      <form
+        action="/create"
+        method="POST"
+        class="flex flex-col gap-5"
+        autocomplete="off"
+      >
+        <input
+          type="text"
+          name="name"
+          placeholder="Enter name"
+          class="p-3 rounded-xl bg-zinc-800/50 text-white placeholder-gray-400 border border-white/10 focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400/50 transition-all"
+          required
+        />
+
+        <input
+          type="email"
+          name="email"
+          placeholder="Enter email"
+          class="p-3 rounded-xl bg-zinc-800/50 text-white placeholder-gray-400 border border-white/10 focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400/50 transition-all"
+          required
+        />
+
+        <input
+          type="url"
+          name="image"
+          placeholder="Image URL"
+          class="p-3 rounded-xl bg-zinc-800/50 text-white placeholder-gray-400 border border-white/10 focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400/50 transition-all"
+        />
+
+        <button
+          type="submit"
+          class="mt-2 bg-yellow-400 hover:bg-yellow-500 text-black font-semibold py-3 rounded-xl transition-all duration-300 shadow-md hover:shadow-yellow-500/30"
+        >
+          Create User
+        </button>
+      </form>
+    </div>
+  </body>
+</html>
