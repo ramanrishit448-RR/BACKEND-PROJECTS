@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Create User</title>
+    <style>
+      .glow-border {
+        position: relative;
+        overflow: hidden;
+      }
+      .glow-border::before {
+        content: "";
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: conic-gradient(
+          from 0deg,
+          #facc15,
+          #3b82f6,
+          #10b981,
+          #facc15
+        );
+        animation: spin 6s linear infinite;
+      }
+      .glow-border::after {
+        content: "";
+        position: absolute;
+        inset: 2px;
+        background: rgba(24, 24, 27, 0.95);
+        border-radius: 1rem;
+      }
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      /* Fade-up animation */
+      @keyframes fadeUp {
+        0% {
+          opacity: 0;
+          transform: translateY(25px);
+        }
+        100% {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .fade-up {
+        animation: fadeUp 0.8s ease-out forwards;
+      }
+    </style>
+  </head>
+
+  <body
+    class="min-h-screen flex items-center justify-center bg-gradient-to-br from-zinc-950 via-zinc-900 to-zinc-800 text-white overflow-hidden relative"
+  >
+    <div
+      class="absolute w-80 h-80 bg-yellow-400/20 blur-3xl rounded-full top-10 left-10 animate-pulse"
+    ></div>
+    <div
+      class="absolute w-80 h-80 bg-blue-500/20 blur-3xl rounded-full bottom-10 right-10 animate-pulse"
+    ></div>
+
+    <div
+      class="relative glow-border rounded-2xl shadow-2xl p-[2px] fade-up"
+      style="animation-delay: 0.2s"
+    >
+      <div
+        class="relative z-10 p-10 rounded-2xl bg-zinc-900/90 backdrop-blur-md flex flex-col gap-6 w-[350px] sm:w-[400px]"
+      >
+        <h1
+          class="text-3xl font-bold text-center bg-gradient-to-r from-yellow-400 via-blue-400 to-green-400 bg-clip-text text-transparent relative z-20"
+        >
+          Create User
+        </h1>
+
+        <form
+          action="/create"
+          method="POST"
+          class="flex flex-col gap-5"
+          autocomplete="off"
+        >
+          <input
+            type="text"
+            name="username"
+            placeholder="Username"
+            required
+            class="p-3 rounded-xl bg-zinc-800/70 text-white placeholder-gray-400 border border-white/10 focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400/40 transition-all"
+          />
+
+          <input
+            type="email"
+            name="email"
+            placeholder="Email"
+            required
+            class="p-3 rounded-xl bg-zinc-800/70 text-white placeholder-gray-400 border border-white/10 focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400/40 transition-all"
+          />
+
+          <input
+            type="password"
+            name="password"
+            placeholder="Password"
+            required
+            class="p-3 rounded-xl bg-zinc-800/70 text-white placeholder-gray-400 border border-white/10 focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400/40 transition-all"
+          />
+
+          <input
+            type="number"
+            name="age"
+            placeholder="Age"
+            min="1"
+            class="p-3 rounded-xl bg-zinc-800/70 text-white placeholder-gray-400 border border-white/10 focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400/40 transition-all"
+          />
+
+          <button
+            type="submit"
+            class="mt-2 py-3 bg-gradient-to-r from-yellow-400 to-blue-400 text-black font-semibold rounded-xl hover:opacity-90 transition-all duration-300 shadow-md hover:shadow-yellow-500/30"
+          >
+            Create User
+          </button>
+        </form>
+
+        <div class="text-center mt-4 text-gray-400 text-sm">
+          <p>
+            View existing users?
+            <a
+              href="/read"
+              class="text-yellow-400 hover:text-blue-400 transition"
+              >Go to List</a
+            >
+          </p>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
