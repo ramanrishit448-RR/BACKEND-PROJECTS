@@ -6,7 +6,6 @@ const postModel = require("./models/post");
 const cookieParser = require("cookie-parser");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const { data } = require("react-router-dom");
 
 app.set("view engine", "ejs");
 app.use(express.json());
@@ -22,8 +21,25 @@ app.get("/login", (req, res) => {
   res.render("login");
 });
 
-app.get("/profile", isLoggedIn, (req, res) => {
-  res.render("login");
+app.get("/profile", isLoggedIn, async (req, res) => {
+  let user = await userModel
+    .findOne({ email: req.user.email })
+    .populate("posts");
+  res.render("profile", { user: user });
+});
+
+app.post("/post", isLoggedIn, async (req, res) => {
+  let user = await userModel.findOne({ email: req.user.email });
+  if (!user) return res.status(404).send("User not found");
+  let { title, content } = req.body;
+  let newPost = await postModel.create({
+    user: user._id,
+    title,
+    content,
+  });
+  user.posts.push(newPost._id);
+  await user.save();
+  res.redirect("/profile");
 });
 
 app.post("/register", async (req, res) => {
@@ -39,7 +55,10 @@ app.post("/register", async (req, res) => {
         password: hash,
         email,
       });
-      let token = jwt.sign({ user_id: user._id, email: email }, "secretkey");
+      let token = jwt.sign(
+        { user_id: createdUser._id, email: email },
+        "secretkey"
+      );
       res.cookie("token", token);
       res.send("User created successfully");
     });
@@ -56,13 +75,13 @@ app.post("/login", async (req, res) => {
     if (result) {
       let token = jwt.sign({ user_id: user._id, email: email }, "secretkey");
       res.cookie("token", token);
-      res.status(200).send("Login successful");
+      res.status(200).redirect("/profile");
     } else res.send("Wrong password");
   });
 });
 
 app.get("/logout", (req, res) => {
-  res.clearCookie("token", "");
+  res.clearCookie("token");
   res.redirect("/login");
 });
 
@@ -71,7 +90,7 @@ function isLoggedIn(req, res, next) {
 
   // If no token exists, redirect to login
   if (!token) {
-    return res.send("You are not logged in");
+    return res.redirect("/login");
   }
 
   try {
@@ -83,7 +102,7 @@ function isLoggedIn(req, res, next) {
     console.error("JWT verification failed:", err.message);
     // Clear invalid token and redirect
     res.clearCookie("token");
-    return res.send("/login");
+    return res.redirect("/login");
   }
 }
 
