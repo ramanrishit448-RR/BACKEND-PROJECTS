@@ -42,6 +42,71 @@ app.post("/post", isLoggedIn, async (req, res) => {
   res.redirect("/profile");
 });
 
+// Toggle like on a post
+app.post("/post/:postId/like", isLoggedIn, async (req, res) => {
+  const { postId } = req.params;
+  const user = await userModel.findOne({ email: req.user.email });
+  if (!user) return res.status(404).send("User not found");
+
+  const post = await postModel.findById(postId);
+  if (!post) return res.status(404).send("Post not found");
+
+  const userIdStr = String(user._id);
+  const index = post.likes.findIndex((id) => String(id) === userIdStr);
+  if (index === -1) {
+    post.likes.push(user._id);
+  } else {
+    post.likes.splice(index, 1);
+  }
+  await post.save();
+  res.redirect("/profile");
+});
+
+// Render edit page
+app.get("/post/:postId/edit", isLoggedIn, async (req, res) => {
+  const { postId } = req.params;
+  const post = await postModel.findById(postId);
+  if (!post) return res.status(404).send("Post not found");
+
+  // Only owner can edit
+  if (String(post.user) !== String(req.user.user_id)) {
+    return res.status(403).send("Forbidden");
+  }
+  res.render("edit", { post });
+});
+
+// Handle edit submit
+app.post("/post/:postId/edit", isLoggedIn, async (req, res) => {
+  const { postId } = req.params;
+  const { title, content } = req.body;
+  const post = await postModel.findById(postId);
+  if (!post) return res.status(404).send("Post not found");
+  if (String(post.user) !== String(req.user.user_id)) {
+    return res.status(403).send("Forbidden");
+  }
+  post.title = title;
+  post.content = content;
+  await post.save();
+  res.redirect("/profile");
+});
+
+// Delete a post
+app.post("/post/:postId/delete", isLoggedIn, async (req, res) => {
+  const { postId } = req.params;
+  const post = await postModel.findById(postId);
+  if (!post) return res.status(404).send("Post not found");
+  if (String(post.user) !== String(req.user.user_id)) {
+    return res.status(403).send("Forbidden");
+  }
+
+  await postModel.deleteOne({ _id: postId });
+
+  // Remove from user's posts array
+  await userModel.updateOne({ _id: post.user }, { $pull: { posts: post._id } });
+
+  res.redirect("/profile");
+});
+
 app.post("/register", async (req, res) => {
   let { name, username, age, password, email } = req.body;
   let user = await userModel.findOne({ email: email });

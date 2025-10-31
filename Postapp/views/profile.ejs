@@ -50,17 +50,32 @@
                 <%= post.title %>
               </h2>
               <p class="text-zinc-400 text-sm"><%= post.content %></p>
-              <div class="btns flex mt-5">
+              <div class="btns flex mt-5 items-center">
+                <form action="/post/<%= post._id %>/like" method="post">
+                  <button
+                    type="submit"
+                    class="bg-blue-500 hover:bg-blue-600 m-2 text-white px-4 py-2 rounded-md"
+                  >
+                    Like (<%= post.likes ? post.likes.length : 0 %>)
+                  </button>
+                </form>
                 <a
-                  href="/like"
-                  class="like btn bg-blue-500 hover:bg-blue-600 m-2 text-white px-4 py-2 rounded-md"
-                  >Like</a
-                >
-                <a
-                  href="/edit"
-                  class="edit btn bg-yellow-500 hover:bg-yellow-600 m-2 text-white px-4 py-2 rounded-md"
+                  href="/post/<%= post._id %>/edit"
+                  class="bg-yellow-500 hover:bg-yellow-600 m-2 text-white px-4 py-2 rounded-md"
                   >Edit</a
                 >
+                <form
+                  action="/post/<%= post._id %>/delete"
+                  method="post"
+                  onsubmit="return confirm('Delete this post?');"
+                >
+                  <button
+                    type="submit"
+                    class="bg-red-600 hover:bg-red-700 m-2 text-white px-4 py-2 rounded-md"
+                  >
+                    Delete
+                  </button>
+                </form>
               </div>
             </div>
             <% }); %>
