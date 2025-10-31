@@ -10,6 +10,9 @@ const postSchema = mongoose.Schema({
   title: {
     type: String,
   },
+  image: {
+    type: String, // public URL path like /uploads/<file>
+  },
   date: {
     type: Date,
     default: Date.now,

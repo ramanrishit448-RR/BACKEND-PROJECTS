@@ -6,12 +6,34 @@ const postModel = require("./models/post");
 const cookieParser = require("cookie-parser");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const multer = require("multer");
+const fs = require("fs");
 
 app.set("view engine", "ejs");
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "public")));
 app.use(cookieParser());
+
+// Ensure uploads directory exists
+const uploadsDir = path.join(__dirname, "public", "uploads");
+if (!fs.existsSync(uploadsDir)) {
+  fs.mkdirSync(uploadsDir, { recursive: true });
+}
+
+// Multer storage configuration
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, uploadsDir);
+  },
+  filename: function (req, file, cb) {
+    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+    const safeOriginal = file.originalname.replace(/[^a-zA-Z0-9_.-]/g, "_");
+    cb(null, uniqueSuffix + "-" + safeOriginal);
+  },
+});
+
+const upload = multer({ storage });
 
 app.get("/", (req, res) => {
   res.render("index");
@@ -28,14 +50,32 @@ app.get("/profile", isLoggedIn, async (req, res) => {
   res.render("profile", { user: user });
 });
 
-app.post("/post", isLoggedIn, async (req, res) => {
+// Upload/replace user avatar
+app.post(
+  "/profile/avatar",
+  isLoggedIn,
+  upload.single("avatar"),
+  async (req, res) => {
+    if (!req.file) return res.redirect("/profile");
+    const avatarPath = "/uploads/" + req.file.filename;
+    await userModel.updateOne(
+      { email: req.user.email },
+      { $set: { avatar: avatarPath } }
+    );
+    res.redirect("/profile");
+  }
+);
+
+app.post("/post", isLoggedIn, upload.single("image"), async (req, res) => {
   let user = await userModel.findOne({ email: req.user.email });
   if (!user) return res.status(404).send("User not found");
   let { title, content } = req.body;
+  const imagePath = req.file ? "/uploads/" + req.file.filename : undefined;
   let newPost = await postModel.create({
     user: user._id,
     title,
     content,
+    image: imagePath,
   });
   user.posts.push(newPost._id);
   await user.save();
@@ -76,19 +116,27 @@ app.get("/post/:postId/edit", isLoggedIn, async (req, res) => {
 });
 
 // Handle edit submit
-app.post("/post/:postId/edit", isLoggedIn, async (req, res) => {
-  const { postId } = req.params;
-  const { title, content } = req.body;
-  const post = await postModel.findById(postId);
-  if (!post) return res.status(404).send("Post not found");
-  if (String(post.user) !== String(req.user.user_id)) {
-    return res.status(403).send("Forbidden");
+app.post(
+  "/post/:postId/edit",
+  isLoggedIn,
+  upload.single("image"),
+  async (req, res) => {
+    const { postId } = req.params;
+    const { title, content } = req.body;
+    const post = await postModel.findById(postId);
+    if (!post) return res.status(404).send("Post not found");
+    if (String(post.user) !== String(req.user.user_id)) {
+      return res.status(403).send("Forbidden");
+    }
+    post.title = title;
+    post.content = content;
+    if (req.file) {
+      post.image = "/uploads/" + req.file.filename;
+    }
+    await post.save();
+    res.redirect("/profile");
   }
-  post.title = title;
-  post.content = content;
-  await post.save();
-  res.redirect("/profile");
-});
+);
 
 // Delete a post
 app.post("/post/:postId/delete", isLoggedIn, async (req, res) => {

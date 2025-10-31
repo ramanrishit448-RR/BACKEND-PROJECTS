@@ -8,6 +8,7 @@ const userSchema = mongoose.Schema({
   age: Number,
   email: String,
   password: String,
+  avatar: String, // public URL like /uploads/<file>
   posts: [{ type: mongoose.Schema.Types.ObjectId, ref: "post" }], // Add this line
 });
 

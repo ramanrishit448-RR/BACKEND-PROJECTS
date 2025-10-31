@@ -4,46 +4,124 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="https://cdn.tailwindcss.com"></script>
-    <title>Edit Post</title>
+    <title>Edit Post | NeonBoard</title>
+
+    <style>
+      * {
+        transition: all 0.3s ease;
+      }
+
+      body {
+        background: linear-gradient(-45deg, #09090b, #111827, #1e1b4b, #0f172a);
+        background-size: 400% 400%;
+        animation: gradientMove 10s ease infinite;
+      }
+
+      @keyframes gradientMove {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
+
+      .glass-card {
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 0 25px rgba(0, 255, 255, 0.1);
+      }
+
+      /* Neon border animation */
+      .neon-border {
+        position: relative;
+        overflow: hidden;
+      }
+
+      @keyframes neonGlow {
+        0% {
+          background-position: 0%;
+        }
+        100% {
+          background-position: 400%;
+        }
+      }
+    </style>
   </head>
-  <body>
-    <div class="w-full min-h-screen bg-zinc-900 text-white">
-      <div class="max-w-xl mx-auto p-6">
-        <h1 class="text-3xl font-bold mb-4">Edit Post</h1>
-        <form
-          action="/post/<%= post._id %>/edit"
-          method="post"
-          class="flex flex-col items-center"
-        >
-          <input
-            type="text"
-            name="title"
-            placeholder="Title"
-            value="<%= post.title %>"
-            class="w-full border-2 border-black p-2 m-2 rounded-md bg-zinc-800"
-          />
-          <textarea
-            name="content"
-            placeholder="Content"
-            class="w-full border-2 border-black p-2 m-2 rounded-md bg-zinc-800"
-          >
-<%= post.content %></textarea
-          >
-          <div class="flex w-full justify-between">
-            <a
-              href="/profile"
-              class="px-4 py-2 m-2 rounded-md bg-zinc-700 hover:bg-zinc-600"
-              >Cancel</a
-            >
-            <button
-              type="submit"
-              class="px-4 py-2 m-2 rounded-md bg-blue-500 hover:bg-blue-600"
-            >
-              Save
-            </button>
-          </div>
-        </form>
+
+  <body
+    class="min-h-screen flex items-center justify-center text-white font-sans relative"
+  >
+    <div
+      class="glass-card neon-border max-w-xl w-11/12 md:w-2/3 lg:w-1/2 rounded-2xl p-8"
+    >
+      <div class="text-center mb-6">
+        <h1 class="text-4xl font-extrabold text-cyan-400 mb-2">Edit Post</h1>
+        <p class="text-zinc-400">Refine your thoughts and update your post</p>
       </div>
+
+      <form
+        action="/post/<%= post._id %>/edit"
+        method="post"
+        enctype="multipart/form-data"
+        class="flex flex-col gap-4"
+      >
+        <input
+          type="text"
+          name="title"
+          placeholder="Title"
+          value="<%= post.title %>"
+          class="w-full p-3 rounded-md bg-zinc-900/70 text-white placeholder-zinc-400 border border-cyan-500 focus:ring-2 focus:ring-cyan-400 focus:outline-none"
+        />
+
+        <textarea
+          name="content"
+          rows="5"
+          placeholder="Content..."
+          class="w-full p-3 rounded-md bg-zinc-900/70 text-white placeholder-zinc-400 border border-cyan-500 focus:ring-2 focus:ring-cyan-400 focus:outline-none resize-none"
+        >
+<%= post.content %></textarea
+        >
+
+        <% if (post.image) { %>
+        <div>
+          <div class="text-sm text-zinc-400 mb-1">Current Image</div>
+          <img
+            src="<%= post.image %>"
+            alt="post image"
+            class="rounded-lg border border-zinc-800 max-h-80 object-cover"
+          />
+        </div>
+        <% } %>
+
+        <div>
+          <label class="block text-sm text-zinc-400 mb-1">Replace Image</label>
+          <input
+            type="file"
+            name="image"
+            accept="image/*"
+            class="block w-full text-sm text-zinc-300 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-zinc-800 file:text-zinc-200 hover:file:bg-zinc-700"
+          />
+        </div>
+
+        <div class="flex justify-between mt-4">
+          <a
+            href="/profile"
+            class="px-6 py-2 rounded-md bg-zinc-700 hover:bg-zinc-600 text-white font-semibold transition"
+            >Cancel</a
+          >
+          <button
+            type="submit"
+            class="px-6 py-2 rounded-md bg-cyan-500 hover:bg-cyan-400 text-black font-bold shadow-md"
+          >
+            Save Changes
+          </button>
+        </div>
+      </form>
     </div>
   </body>
 </html>
