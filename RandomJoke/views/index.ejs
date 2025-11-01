@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Random Joke App</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body
+    class="min-h-screen bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center p-4"
+  >
+    <div class="bg-white rounded-lg shadow-xl p-8 max-w-md w-full">
+      <h1 class="text-3xl font-bold text-center mb-6 text-gray-800">
+        Random Joke
+      </h1>
+
+      <% if (joke) { %>
+      <div class="mb-6 p-4 bg-gray-50 rounded-lg border-l-4 border-blue-500">
+        <p class="text-lg font-semibold text-gray-800 mb-2">
+          <%= joke.setup %>
+        </p>
+        <p class="text-gray-600 italic"><%= joke.punchline %></p>
+        <p class="text-sm text-gray-400 mt-2">Type: <%= joke.type %></p>
+      </div>
+      <% } else if (typeof error !== 'undefined') { %>
+      <div class="mb-6 p-4 bg-red-50 rounded-lg border-l-4 border-red-500">
+        <p class="text-red-600"><%= error %></p>
+      </div>
+      <% } else { %>
+      <p class="mb-6 text-gray-500 text-center">
+        Click the button to get a random joke!
+      </p>
+      <% } %>
+
+      <form action="/joke" method="POST" class="text-center">
+        <button
+          type="submit"
+          class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 px-6 rounded-lg transition-colors shadow-lg"
+        >
+          Get Random Joke
+        </button>
+      </form>
+    </div>
+  </body>
+</html>
